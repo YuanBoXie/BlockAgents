@@ -263,12 +263,23 @@ export default {
     const isPremium = ref(false);
     const triggerSubscription = async () => {
       try {
-        const tx = await subscribe();
+        if (!window.ethereum) {
+          throw new Error('请先安装并启用MetaMask!');
+        }
+
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        const signer = await provider.getSigner();
+
+        const contract = new ethers.Contract(ERC20_ADDRESS, ERC20_ABI, signer);
+        const contractWithSigner = await contract.connect(signer);
+
+        const tx = await contractWithSigner.subscribe(20);
         await tx.wait();
-        antMessage.success("Subscription function triggered successfully!");
+
+        antMessage.success('Subscription successful');
       } catch (error) {
-        console.error(error);
-        antMessage.error("Failed to trigger subscription function.");
+        console.error('Subscription failed:', error);
+        antMessage.error('Subscription failed');
       }
     };
 
