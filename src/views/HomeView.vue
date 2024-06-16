@@ -4,9 +4,7 @@
       <div class="premium">
         <ATag v-if="isPremium" color="gold">Premium</ATag>
         <div v-else>
-          <AButton type="primary" @click="triggerSubscription"
-            >Premium Subscriptions</AButton
-          >
+          <AButton type="primary" @click="triggerSubscription">Premium Subscriptions</AButton>
           <AButton @click="checkSubscription" style="margin-left: 20px">
             <ReloadOutlined /> Refresh
           </AButton>
@@ -18,31 +16,18 @@
       </div>
     </div>
     <div class="prompt">
-      <h3
-        style="
+      <h3 style="
           color: #fff;
           font-weight: 600;
           margin-left: 7%;
           line-height: 50px;
-        "
-      >
+        ">
         常见问题
       </h3>
-      <div
-        v-for="(item, index) in commonIssues"
-        :key="index"
-        class="issue"
-        @click="quickQuestion(item)"
-      >
+      <div v-for="(item, index) in commonIssues" :key="index" class="issue" @click="quickQuestion(item)">
         {{ item }}
       </div>
-      <Popconfirm
-        title="确定清空对话记录吗?"
-        ok-text="确定"
-        cancel-text="取消"
-        @confirm="clear"
-        @cancel="cancel"
-      >
+      <Popconfirm title="确定清空对话记录吗?" ok-text="确定" cancel-text="取消" @confirm="clear" @cancel="cancel">
         <div class="clear">
           <ClearOutlined /><span style="margin-left: 10px">清空记录</span>
         </div>
@@ -50,11 +35,7 @@
     </div>
     <div class="chat-box">
       <div class="chat-list" ref="chatListRef">
-        <div
-          v-for="(item, index) in chatList"
-          :key="index"
-          :class="['message', item.sender]"
-        >
+        <div v-for="(item, index) in chatList" :key="index" :class="['message', item.sender]">
           <img class="avatar" :src="item.avatar" alt="" />
 
           <div v-if="item.loading" class="message-text">
@@ -75,22 +56,9 @@
       </div>
 
       <div class="user-input-container">
-        <input
-          v-model="userInput"
-          class="user-input"
-          placeholder="Send a message..."
-        />
-        <div
-          @click="sendMessage2()"
-          @keyup.enter="sendMessage2()"
-          class="send-button"
-          v-if="userInput !== ''"
-        >
-          <img
-            src="../assets/send.png"
-            style="width: 20px; margin-right: 10px"
-            alt=""
-          />Send
+        <input v-model="userInput" class="user-input" placeholder="Send a message..." />
+        <div @click="sendMessage2()" @keyup.enter="sendMessage2()" class="send-button" v-if="userInput !== ''">
+          <img src="../assets/send.png" style="width: 20px; margin-right: 10px" alt="" />Send
         </div>
       </div>
     </div>
@@ -110,6 +78,7 @@ import Account from "../components/account.vue";
 import Connect from "../components/connect.vue";
 import { useAccount, useWriteContract } from "@wagmi/vue";
 import { ERC20_ABI, ERC20_ADDRESS } from "../constants.js";
+import { ethers } from "ethers"
 
 export default {
   components: {
@@ -235,7 +204,7 @@ export default {
       antMessage.success("清除成功");
     };
 
-    const cancel = () => {};
+    const cancel = () => { };
 
     const copyToClipboard = (message) => {
       navigator.clipboard
@@ -368,12 +337,15 @@ export default {
 }
 
 .chat-list::-webkit-scrollbar {
-  width: 8px; /* 设置滚动条宽度 */
+  width: 8px;
+  /* 设置滚动条宽度 */
 }
 
 .chat-list::-webkit-scrollbar-thumb {
-  background-color: #bbb; /* 设置滑块颜色 */
-  border-radius: 4px; /* 设置滑块圆角 */
+  background-color: #bbb;
+  /* 设置滑块颜色 */
+  border-radius: 4px;
+  /* 设置滑块圆角 */
 }
 
 .chat-list::-webkit-scrollbar-thumb:hover {
@@ -493,10 +465,12 @@ export default {
 }
 
 @keyframes blink {
+
   0%,
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0;
   }
