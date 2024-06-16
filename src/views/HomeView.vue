@@ -79,6 +79,7 @@ import Connect from "../components/connect.vue";
 import { useAccount, useWriteContract } from "@wagmi/vue";
 import { ERC20_ABI, ERC20_ADDRESS } from "../constants.js";
 import { ethers } from "ethers"
+import axios from "axios";
 
 export default {
   components: {
@@ -97,7 +98,7 @@ export default {
     let chatList = reactive([]);
     const chatListRef = ref(null);
     const commonIssues = ref([
-      " ZeroGravity（0G）是什么？它的主要特点是什么？",
+      " What is ZeroGravity(0G)? What's the main feature?",
     ]);
 
     const sendMessage = () => {
@@ -171,12 +172,8 @@ export default {
       userInput.value = "";
 
       try {
-        const response = await axios.get(`http://127.0.0.1:5001/api/chat`, {
-          params: {
-            msg: userInput.value,
-          },
-        });
-
+        const response = await axios.get(`http://127.0.0.1:5001/api/chat?msg=${encodeURIComponent(userInput.value)}`);
+        console.log(response)
         const aiMessage = {
           sender: "ai",
           avatar: "/src/assets/ai_avatar.png",
@@ -219,7 +216,7 @@ export default {
 
     const quickQuestion = (value) => {
       userInput.value = value;
-      sendMessage();
+      sendMessage2();
     };
 
     const { isConnected } = useAccount();
