@@ -81,8 +81,8 @@
           placeholder="Send a message..."
         />
         <div
-          @click="sendMessage()"
-          @keyup.enter="sendMessage()"
+          @click="sendMessage2()"
+          @keyup.enter="sendMessage2()"
           class="send-button"
           v-if="userInput !== ''"
         >
