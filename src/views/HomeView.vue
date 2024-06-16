@@ -181,6 +181,55 @@ export default {
       };
     };
 
+    const sendMessage2 = async () => {
+      const userMessage = {
+        sender: "user",
+        avatar: "/src/assets/user_avatar.png",
+        message: userInput.value,
+        time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+      };
+      chatList.push(userMessage);
+      chatListRef.value.scrollTop = chatListRef.value.scrollHeight;
+
+      const loadingMessage = {
+        sender: "ai",
+        avatar: "/src/assets/ai_avatar.png",
+        loading: true,
+      };
+      chatList.push(loadingMessage);
+      chatListRef.value.scrollTop = chatListRef.value.scrollHeight;
+
+      userInput.value = "";
+
+      try {
+        const response = await axios.get(`http://127.0.0.1:5001/api/chat`, {
+          params: {
+            msg: userInput.value,
+          },
+        });
+
+        const aiMessage = {
+          sender: "ai",
+          avatar: "/src/assets/ai_avatar.png",
+          message: response.data.answer,
+          time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        };
+
+        chatList[chatList.length - 1] = aiMessage;
+        chatListRef.value.scrollTop = chatListRef.value.scrollHeight;
+      } catch (error) {
+        console.error(error);
+        const errorMessage = {
+          sender: "ai",
+          avatar: "/src/assets/ai_avatar.png",
+          message: "Sorry, something went wrong. Please try again.",
+          time: dayjs().format("YYYY-MM-DD HH:mm:ss"),
+        };
+        chatList[chatList.length - 1] = errorMessage;
+        chatListRef.value.scrollTop = chatListRef.value.scrollHeight;
+      }
+    };
+
     const clear = () => {
       chatList.splice(0, chatList.length);
       antMessage.success("清除成功");
@@ -208,35 +257,33 @@ export default {
     const { writeContractAsync: subscribe } = useWriteContract({
       abi: ERC20_ABI,
       address: ERC20_ADDRESS,
-      functionName: 'subscribe',
+      functionName: "subscribe",
       args: [1],
     });
     const isPremium = ref(false);
-    const triggerSubscription = async() => {
-       try {
+    const triggerSubscription = async () => {
+      try {
         const tx = await subscribe();
         await tx.wait();
-        antMessage.success('Subscription function triggered successfully!');
+        antMessage.success("Subscription function triggered successfully!");
       } catch (error) {
         console.error(error);
-        antMessage.error('Failed to trigger subscription function.');
+        antMessage.error("Failed to trigger subscription function.");
       }
     };
 
     const checkSubscription = () => {
       setTimeout(() => {
-        const currentStatus = Math.random() > 0.5; // 随机模拟订阅状态
-        isPremium.value = currentStatus;
+        isPremium.value = true;
         message.info("Subscription status refreshed.");
       }, 1000);
     };
-
-    
 
     return {
       userInput,
       chatList,
       sendMessage,
+      sendMessage2,
       chatListRef,
       clear,
       cancel,
